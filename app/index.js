@@ -108,7 +108,7 @@ module.exports = generators.Base.extend({
   writing: {
     gulpfile: function () {
       this.fs.copyTpl(
-        this.templatePath('gulpfile.babel.js'),
+        this.templatePath('_gulpfile.babel.js'),
         this.destinationPath('gulpfile.babel.js'),
         {
           date: (new Date).toISOString().split('T')[0],
