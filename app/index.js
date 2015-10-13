@@ -217,7 +217,28 @@ module.exports = generators.Base.extend({
 
       this.fs.copy(
         this.templatePath('robots.txt'),
-        this.destinationPath('app/robots.txt'));
+        this.destinationPath('app/robots.txt')
+      );
+
+      this.fs.copy(
+        this.templatePath('browserconfig.xml'),
+        this.destinationPath('app/browserconfig.xml')
+      );
+
+      this.fs.copy(
+        this.templatePath('crossdomain.xml'),
+        this.destinationPath('app/crossdomain.xml')
+      );
+
+      this.fs.copy(
+        this.templatePath('tile.png'),
+        this.destinationPath('app/tile.png')
+      );
+
+      this.fs.copy(
+        this.templatePath('tile-wide.png'),
+        this.destinationPath('app/tile-wide.png')
+      );
     },
 
     styles: function () {
