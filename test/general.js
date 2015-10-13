@@ -36,10 +36,10 @@ describe('general', function () {
       'app/apple-touch-icon.png',
       'app/robots.txt',
       'app/index.html',
-      'app/scripts/main.js',
-      'app/styles/main.css',
-      'app/images',
-      'app/fonts',
+      'app/js/main.js',
+      'app/css/main.css',
+      'app/img',
+      'app/fnt',
       'test'
     ]);
   });

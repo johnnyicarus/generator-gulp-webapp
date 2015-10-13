@@ -231,7 +231,7 @@ module.exports = generators.Base.extend({
 
       this.fs.copyTpl(
         this.templatePath(css),
-        this.destinationPath('app/styles/' + css),
+        this.destinationPath('app/css/' + css),
         {
           includeBootstrap: this.includeBootstrap
         }
@@ -241,7 +241,7 @@ module.exports = generators.Base.extend({
     scripts: function () {
       this.fs.copy(
         this.templatePath('main.js'),
-        this.destinationPath('app/scripts/main.js')
+        this.destinationPath('app/js/main.js')
       );
     },
 
@@ -288,8 +288,8 @@ module.exports = generators.Base.extend({
     },
 
     misc: function () {
-      mkdirp('app/images');
-      mkdirp('app/fonts');
+      mkdirp('app/img');
+      mkdirp('app/fnt');
     }
   },
 
@@ -330,7 +330,7 @@ module.exports = generators.Base.extend({
         bowerJson: bowerJson,
         directory: 'bower_components',
         ignorePath: /^(\.\.\/)+/,
-        src: 'app/styles/*.scss'
+        src: 'app/css/*.scss'
       });
     }
   }

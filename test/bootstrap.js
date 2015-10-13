@@ -20,7 +20,7 @@ describe('Bootstrap feature', function () {
     });
 
     it('should add the comment block', function () {
-      assert.fileContent('app/index.html', 'build:js scripts/plugins.js')
+      assert.fileContent('app/index.html', 'build:js js/plugins.js')
     });
   });
 
@@ -38,7 +38,7 @@ describe('Bootstrap feature', function () {
     });
 
     it('shouldn\'t add the comment block', function () {
-      assert.noFileContent('app/index.html', 'build:js scripts/plugins.js')
+      assert.noFileContent('app/index.html', 'build:js js/plugins.js')
     });
   });
 
@@ -63,7 +63,7 @@ describe('Bootstrap feature', function () {
     });
 
     it('should contain the font icon path variable', function () {
-      assert.fileContent('app/styles/main.scss', '$icon-font-path');
+      assert.fileContent('app/css/main.scss', '$icon-font-path');
     });
 
     it('should correctly override bootstrap\'s bower.json', function() {

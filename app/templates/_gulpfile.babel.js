@@ -7,9 +7,13 @@ import {stream as wiredep} from 'wiredep';
 
 const $ = gulpLoadPlugins();
 const reload = browserSync.reload;
+const stylesFold  = 'css';
+const scriptsFold = 'js';
+const imagesFold  = 'img';
+const fontsFold   = 'fnt';
 
 gulp.task('styles', () => {<% if (includeSass) { %>
-  return gulp.src('app/styles/*.scss')
+  return gulp.src('app/'+stylesFold+'/*.scss')
     .pipe($.plumber())
     .pipe($.sourcemaps.init())
     .pipe($.sass.sync({
@@ -21,7 +25,7 @@ gulp.task('styles', () => {<% if (includeSass) { %>
     .pipe($.sourcemaps.init())<% } %>
     .pipe($.autoprefixer({browsers: ['> 1%', 'last 2 versions', 'Firefox ESR']}))
     .pipe($.sourcemaps.write())
-    .pipe(gulp.dest('.tmp/styles'))
+    .pipe(gulp.dest('.tmp/'+stylesFold))
     .pipe(reload({stream: true}));
 });
 
@@ -56,7 +60,7 @@ const testLintOptions = {
   }
 };
 
-gulp.task('lint', lint('app/scripts/**/*.js'));
+gulp.task('lint', lint('app/'+scriptsFold+'/**/*.js'));
 gulp.task('lint:test', lint('test/spec/**/*.js', testLintOptions));
 
 <% if (includeBabel) { -%>
@@ -73,7 +77,7 @@ gulp.task('html', ['styles'], () => {
 });
 
 gulp.task('images', () => {
-  return gulp.src('app/images/**/*')
+  return gulp.src('app/'+imagesFold+'/**/*')
     .pipe($.cache($.imagemin({
       progressive: true,
       interlaced: true,
@@ -81,14 +85,14 @@ gulp.task('images', () => {
       // as hooks for embedding and styling
       svgoPlugins: [{cleanupIDs: false}]
     })))
-    .pipe(gulp.dest('dist/images'));
+    .pipe(gulp.dest('dist/'+imagesFold));
 });
 
 gulp.task('fonts', () => {
   return gulp.src(require('main-bower-files')('**/*.{eot,svg,ttf,woff,woff2}', function (err) {})
-    .concat('app/fonts/**/*'))
-    .pipe(gulp.dest('.tmp/fonts'))
-    .pipe(gulp.dest('dist/fonts'));
+    .concat('app/'+fontsFold+'/**/*'))
+    .pipe(gulp.dest('.tmp/'+fontsFold))
+    .pipe(gulp.dest('dist/'+fontsFold));
 });
 
 gulp.task('extras', () => {
@@ -121,17 +125,18 @@ gulp.task('serve', ['styles', 'fonts'], () => {
   gulp.watch([
     'app/*.html',
 <% if (!includeBabel) { -%>
-    'app/scripts/**/*.js',
+    'app/'+scriptsFold+'/**/*.js',
+
 <% } -%>
-    'app/images/**/*',
-    '.tmp/fonts/**/*'
+    'app/'+imagesFold+'/**/*',
+    '.tmp/'+fontsFold+'/**/*'
   ]).on('change', reload);
 
-  gulp.watch('app/styles/**/*.<%= includeSass ? 'scss' : 'css' %>', ['styles']);
+  gulp.watch('app/'+stylesFold+'/**/*.<%= includeSass ? 'scss' : 'css' %>', ['styles']);
 <% if (includeBabel) { -%>
-  gulp.watch('app/scripts/**/*.js', ['scripts']);
+  gulp.watch('app/'+scriptsFold+'/**/*.js', ['scripts']);
 <% } -%>
-  gulp.watch('app/fonts/**/*', ['fonts']);
+  gulp.watch('app/'+fontsFold+'/**/*', ['fonts']);
   gulp.watch('bower.json', ['wiredep', 'fonts']);
 });
 
@@ -168,7 +173,7 @@ gulp.task('serve:test', () => {
   });
 
 <% if (includeBabel) { -%>
-  gulp.watch('app/scripts/**/*.js', ['scripts']);
+  gulp.watch('app/'+scriptsFold+'/**/*.js', ['scripts']);
 <% } -%>
   gulp.watch('test/spec/**/*.js').on('change', reload);
   gulp.watch('test/spec/**/*.js', ['lint:test']);
@@ -176,11 +181,11 @@ gulp.task('serve:test', () => {
 
 // inject bower components
 gulp.task('wiredep', () => {<% if (includeSass) { %>
-  gulp.src('app/styles/*.scss')
+  gulp.src('app/'+stylesFold+'/*.scss')
     .pipe(wiredep({
       ignorePath: /^(\.\.\/)+/
     }))
-    .pipe(gulp.dest('app/styles'));
+    .pipe(gulp.dest('app/'+stylesFold));
 <% } %>
   gulp.src('app/*.html')
     .pipe(wiredep({<% if (includeBootstrap) { if (includeSass) { %>
