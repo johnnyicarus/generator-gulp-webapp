@@ -9,58 +9,28 @@ describe('Bootstrap feature', function () {
       helpers.run(path.join(__dirname, '../app'))
         .inDir(path.join(__dirname, 'temp'))
         .withOptions({'skip-install': true})
-        .withPrompts({features: [
-          'includeBootstrap'
-        ]})
+        .withPrompts({
+          features: [
+            'includeStyleFramework'
+          ],
+          framework: 'includeBootstrap'
+        })
         .on('end', done);
-    });
-
-    it('shouldn\'t add jQuery explicitly as a dependency', function () {
-      assert.noFileContent('bower.json', '"jquery"');
     });
 
     it('should add the comment block', function () {
       assert.fileContent('app/index.html', 'build:js js/plugins.js')
     });
-  });
 
-  describe('off', function () {
-    before(function (done) {
-      helpers.run(path.join(__dirname, '../app'))
-        .inDir(path.join(__dirname, 'temp'))
-        .withOptions({'skip-install': true})
-        .withPrompts({features: []})
-        .on('end', done);
-    });
-
-    it('should add jQuery explicitly as a dependency', function () {
-      assert.fileContent('bower.json', '"jquery"');
-    });
-
-    it('shouldn\'t add the comment block', function () {
-      assert.noFileContent('app/index.html', 'build:js js/plugins.js')
-    });
-  });
-
-  describe('with Sass', function () {
-    before(function (done) {
-      helpers.run(path.join(__dirname, '../app'))
-        .inDir(path.join(__dirname, 'temp'))
-        .withOptions({'skip-install': true})
-        .withPrompts({features: [
-          'includeSass',
-          'includeBootstrap'
-        ]})
-        .on('end', done);
-    });
-
-    it('should use Bootstrap Sass', function () {
+    it('should add Bootstrap Sass as dependency', function () {
       assert.fileContent('bower.json', '"bootstrap-sass"');
     });
 
     it('should output the correct <script> paths', function () {
       assert.fileContent('app/index.html', /src=\"(.*?)\/bootstrap-sass\/assets\/javascripts\/bootstrap\//);
     });
+
+    // should add comment block in main.scss
 
     it('should contain the font icon path variable', function () {
       assert.fileContent('app/css/main.scss', '$icon-font-path');
@@ -75,37 +45,29 @@ describe('Bootstrap feature', function () {
 
       assert.fileContent('bower.json', 'assets/javascripts/bootstrap.js');
     });
+
+    it('shouldn\'t add jQuery explicitly as a dependency', function () {
+      assert.noFileContent('bower.json', '"jquery"');
+    });
   });
 
-  describe('without Sass', function () {
+  describe('off', function () {
     before(function (done) {
       helpers.run(path.join(__dirname, '../app'))
         .inDir(path.join(__dirname, 'temp'))
         .withOptions({'skip-install': true})
-        .withPrompts({features: [
-          'includeBootstrap'
-        ]})
+        .withPrompts({
+          features: []
+        })
         .on('end', done);
     });
 
-    it('should use Bootstrap', function () {
-      assert.fileContent('bower.json', '"bootstrap"');
+    it('should add jQuery explicitly as a dependency', function () {
+      assert.fileContent('bower.json', '"jquery"');
     });
 
-    it('should output the correct <script> paths', function () {
-      assert.fileContent('app/index.html', /src=\"(.*?)\/bootstrap\/js\//);
-    });
-
-    it('should correctly override bootstrap\'s bower.json', function() {
-      assert.fileContent('bower.json', '"overrides"');
-
-      assert.fileContent('bower.json', 'less/bootstrap.less');
-
-      assert.fileContent('bower.json', 'dist/css/bootstrap.css');
-
-      assert.fileContent('bower.json', 'dist/js/bootstrap.js');
-
-      assert.fileContent('bower.json', 'dist/fonts/*');
+    it('shouldn\'t add the comment block', function () {
+      assert.noFileContent('app/index.html', 'build:js js/plugins.js')
     });
   });
 });

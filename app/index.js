@@ -57,7 +57,7 @@ module.exports = generators.Base.extend({
     var done = this.async();
 
     if (!this.options['skip-welcome-message']) {
-      this.log(yosay('\'Allo \'allo! Out of the box I include HTML5 Boilerplate, jQuery, and a gulpfile to build your app.'));
+      this.log(yosay('\'Allo \'allo! Out of the box I include HTML5 Boilerplate, SASS and a gulpfile to build your app.'));
     }
 
     var prompts = [{
@@ -65,12 +65,8 @@ module.exports = generators.Base.extend({
       name: 'features',
       message: 'What more would you like?',
       choices: [{
-        name: 'Sass',
-        value: 'includeSass',
-        checked: true
-      }, {
-        name: 'Bootstrap',
-        value: 'includeBootstrap',
+        name: 'A Sass Framework',
+        value: 'includeStyleFramework',
         checked: true
       }, {
         name: 'Modernizr',
@@ -78,17 +74,37 @@ module.exports = generators.Base.extend({
         checked: true
       }]
     }, {
+      type: 'list',
+      name: 'framework',
+      message: 'Which framework would you like?',
+      default: 'includeBourbon',
+      choices: [{
+        name: 'Bourbon\/Neat',
+        value: 'includeBourbon'
+      }, {
+        name: 'Bootstrap',
+        value: 'includeBootstrap'
+      }],
+      when: function (answers) {
+        return !answers.features.indexOf('includeStyleFramework') !== -1;
+      }
+    }, {
       type: 'confirm',
       name: 'includeJQuery',
       message: 'Would you like to include jQuery?',
       default: true,
       when: function (answers) {
-        return answers.features.indexOf('includeBootstrap') === -1;
+        return answers.framework != 'includeBootstrap';
       }
     }];
 
     this.prompt(prompts, function (answers) {
       var features = answers.features;
+      var framework = answers.framework;
+
+      this.log(features);
+      this.log(framework);
+      this.log(answers.includeJQuery);
 
       function hasFeature(feat) {
         return features && features.indexOf(feat) !== -1;
@@ -96,16 +112,36 @@ module.exports = generators.Base.extend({
 
       // manually deal with the response, get back and store the results.
       // we change a bit this way of doing to automatically do this in the self.prompt() method.
-      this.includeSass = hasFeature('includeSass');
-      this.includeBootstrap = hasFeature('includeBootstrap');
+      this.includeStyleFramework = hasFeature('includeStyleFramework');
       this.includeModernizr = hasFeature('includeModernizr');
       this.includeJQuery = answers.includeJQuery;
+
+      if (this.includeStyleFramework) {
+        if (framework === 'includeBootstrap') {
+          this.includeBourbon = false;
+          this.includeBootstrap = true;
+          this.includeJQuery = false;
+        } else {
+          this.includeBourbon = true;
+          this.includeBootstrap = false;
+        }
+      } else {
+        this.includeBourbon = false;
+        this.includeBootstrap = false;
+      }
+
+      this.log('include style: ' + this.includeStyleFramework);
+      this.log('include modernizr: ' + this.includeModernizr);
+      this.log('include bourbon: ' + this.includeBourbon);
+      this.log('include bootstrap: ' + this.includeBootstrap);
+      this.log('include jquery: ' + this.includeJQuery);
 
       done();
     }.bind(this));
   },
 
   writing: {
+
     gulpfile: function () {
       this.fs.copyTpl(
         this.templatePath('_gulpfile.babel.js'),
@@ -114,7 +150,6 @@ module.exports = generators.Base.extend({
           date: (new Date).toISOString().split('T')[0],
           name: this.pkg.name,
           version: this.pkg.version,
-          includeSass: this.includeSass,
           includeBootstrap: this.includeBootstrap,
           includeBabel: this.options['babel'],
           testFramework: this.options['test-framework']
@@ -123,11 +158,10 @@ module.exports = generators.Base.extend({
     },
 
     packageJSON: function () {
-      this.fs.copyTpl(
+      this.fs.copy(
         this.templatePath('_package.json'),
-        this.destinationPath('package.json'),
+        this.destinationPath('package.json')
         {
-          includeSass: this.includeSass,
           includeBabel: this.options['babel']
         }
       );
@@ -143,11 +177,13 @@ module.exports = generators.Base.extend({
     git: function () {
       this.fs.copy(
         this.templatePath('gitignore'),
-        this.destinationPath('.gitignore'));
+        this.destinationPath('.gitignore')
+      );
 
       this.fs.copy(
         this.templatePath('gitattributes'),
-        this.destinationPath('.gitattributes'));
+        this.destinationPath('.gitattributes')
+      );
     },
 
     bower: function () {
@@ -158,31 +194,22 @@ module.exports = generators.Base.extend({
       };
 
       if (this.includeBootstrap) {
-        if (this.includeSass) {
-          bowerJson.dependencies['bootstrap-sass'] = '~3.3.5';
-          bowerJson.overrides = {
-            'bootstrap-sass': {
-              'main': [
-                'assets/stylesheets/_bootstrap.scss',
-                'assets/fonts/bootstrap/*',
-                'assets/javascripts/bootstrap.js'
-              ]
-            }
-          };
-        } else {
-          bowerJson.dependencies['bootstrap'] = '~3.3.5';
-          bowerJson.overrides = {
-            'bootstrap': {
-              'main': [
-                'less/bootstrap.less',
-                'dist/css/bootstrap.css',
-                'dist/js/bootstrap.js',
-                'dist/fonts/*'
-              ]
-            }
-          };
-        }
-      } else if (this.includeJQuery) {
+        bowerJson.dependencies['bootstrap-sass'] = '~3.3.5';
+        bowerJson.overrides = {
+          'bootstrap-sass': {
+            'main': [
+              'assets/stylesheets/_bootstrap.scss',
+              'assets/fonts/bootstrap/*',
+              'assets/javascripts/bootstrap.js'
+            ]
+          }
+        };
+      } else if (this.includeBourbon) {
+        bowerJson.dependencies['bourbon'] = '~4.2.6';
+        bowerJson.dependencies['neat'] = '~1.7.2';
+      }
+
+      if (this.includeJQuery) {
         bowerJson.dependencies['jquery'] = '~2.1.1';
       }
 
@@ -191,6 +218,7 @@ module.exports = generators.Base.extend({
       }
 
       this.fs.writeJSON('bower.json', bowerJson);
+
       this.fs.copy(
         this.templatePath('bowerrc'),
         this.destinationPath('.bowerrc')
@@ -242,18 +270,11 @@ module.exports = generators.Base.extend({
     },
 
     styles: function () {
-      var css = 'main';
-
-      if (this.includeSass) {
-        css += '.scss';
-      } else {
-        css += '.css';
-      }
-
       this.fs.copyTpl(
-        this.templatePath(css),
-        this.destinationPath('app/css/' + css),
+        this.templatePath('main.scss'),
+        this.destinationPath('app/css/main.scss'),
         {
+          includeBourbon: this.includeBourbon,
           includeBootstrap: this.includeBootstrap
         }
       );
@@ -271,13 +292,7 @@ module.exports = generators.Base.extend({
 
       // path prefix for Bootstrap JS files
       if (this.includeBootstrap) {
-        bsPath = '/bower_components/';
-
-        if (this.includeSass) {
-          bsPath += 'bootstrap-sass/assets/javascripts/bootstrap/';
-        } else {
-          bsPath += 'bootstrap/js/';
-        }
+        bsPath = '/bower_components/bootstrap-sass/assets/javascripts/bootstrap/';
       }
 
       this.fs.copyTpl(
@@ -285,7 +300,6 @@ module.exports = generators.Base.extend({
         this.destinationPath('app/index.html'),
         {
           appname: this.appname,
-          includeSass: this.includeSass,
           includeBootstrap: this.includeBootstrap,
           includeModernizr: this.includeModernizr,
           includeJQuery: this.includeJQuery,
@@ -345,7 +359,7 @@ module.exports = generators.Base.extend({
       src: 'app/index.html'
     });
 
-    if (this.includeSass) {
+    if (this.includeBootstrap) {
       // wire Bower packages to .scss
       wiredep({
         bowerJson: bowerJson,

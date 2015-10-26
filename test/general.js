@@ -10,7 +10,10 @@ describe('general', function () {
       .withOptions({
         'skip-install': true
       })
-      .withPrompts({features: []})
+      .withPrompts({
+        features: [],
+        framework: []
+      })
       .withGenerators([
         [helpers.createDummyGenerator(), 'mocha:app']
       ])
@@ -37,7 +40,7 @@ describe('general', function () {
       'app/robots.txt',
       'app/index.html',
       'app/js/main.js',
-      'app/css/main.css',
+      'app/css/main.scss',
       'app/img',
       'app/fnt',
       'test'
