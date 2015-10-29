@@ -46,6 +46,9 @@ describe('Bourbon feature', function () {
       ]);
     });
 
+    it('should have corect path to neat-helpers in _grid-settings.scss', function () {
+      assert.fileContent('app/css/base/_grid-settings.scss', /@import(.*?)bower_components\/neat\/app\/assets\/stylesheets\/neat-helpers/)
+    })
   });
 
   describe('off', function () {
