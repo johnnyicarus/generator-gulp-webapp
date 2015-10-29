@@ -195,7 +195,7 @@ gulp.task('wiredep', () => {
     .pipe(gulp.dest('app'));
 });
 
-gulp.task('deploy', ['build', 'clean'], () => {
+gulp.task('deploy', ['build'], () => {
   return gulp.src('dist')
     .pipe($.subtree());
 });
