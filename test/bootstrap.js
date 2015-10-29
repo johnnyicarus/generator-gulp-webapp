@@ -66,6 +66,10 @@ describe('Bootstrap feature', function () {
       assert.fileContent('bower.json', '"jquery"');
     });
 
+    it('should add normalize.css explicitly as a dependency', function () {
+      assert.fileContent('bower.json', '"normalize-css"')
+    });
+
     it('shouldn\'t add the comment block', function () {
       assert.noFileContent('app/index.html', 'build:js js/plugins.js')
     });

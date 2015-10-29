@@ -102,10 +102,6 @@ module.exports = generators.Base.extend({
       var features = answers.features;
       var framework = answers.framework;
 
-      this.log(features);
-      this.log(framework);
-      this.log(answers.includeJQuery);
-
       function hasFeature(feat) {
         return features && features.indexOf(feat) !== -1;
       };
@@ -129,12 +125,6 @@ module.exports = generators.Base.extend({
         this.includeBourbon = false;
         this.includeBootstrap = false;
       }
-
-      this.log('include style: ' + this.includeStyleFramework);
-      this.log('include modernizr: ' + this.includeModernizr);
-      this.log('include bourbon: ' + this.includeBourbon);
-      this.log('include bootstrap: ' + this.includeBootstrap);
-      this.log('include jquery: ' + this.includeJQuery);
 
       done();
     }.bind(this));
@@ -192,6 +182,10 @@ module.exports = generators.Base.extend({
         private: true,
         dependencies: {}
       };
+
+      if (!this.includeBootstrap) {
+        bowerJson.dependencies['normalize-css'] = '~3.0.3';
+      }
 
       if (this.includeBootstrap) {
         bowerJson.dependencies['bootstrap-sass'] = '~3.3.5';
@@ -278,6 +272,48 @@ module.exports = generators.Base.extend({
           includeBootstrap: this.includeBootstrap
         }
       );
+
+      if (this.includeBourbon) {
+        this.fs.copy(
+          this.templatePath('_base.scss'),
+          this.destinationPath('app/css/base/_base.scss')
+        );
+
+        this.fs.copy(
+          this.templatePath('_buttons.scss'),
+          this.destinationPath('app/css/base/_buttons.scss')
+        );
+
+        this.fs.copy(
+          this.templatePath('_forms.scss'),
+          this.destinationPath('app/css/base/_forms.scss')
+        );
+
+        this.fs.copy(
+          this.templatePath('_grid-settings.scss'),
+          this.destinationPath('app/css/base/_grid-settings.scss')
+        );
+
+        this.fs.copy(
+          this.templatePath('_lists.scss'),
+          this.destinationPath('app/css/base/_lists.scss')
+        );
+
+        this.fs.copy(
+          this.templatePath('_tables.scss'),
+          this.destinationPath('app/css/base/_tables.scss')
+        );
+
+        this.fs.copy(
+          this.templatePath('_typography.scss'),
+          this.destinationPath('app/css/base/_typography.scss')
+        );
+
+        this.fs.copy(
+          this.templatePath('_variables.scss'),
+          this.destinationPath('app/css/base/_variables.scss')
+        );
+      }
     },
 
     scripts: function () {

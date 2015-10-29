@@ -1,11 +1,12 @@
-<% if (includeBourbon) { %>
-@import "../bower_components/bourbon/app/assets/stylesheets/bourbon";
+<% if (includeBourbon) { %>@import "../bower_components/bourbon/app/assets/stylesheets/bourbon";
 @import "base/grid-settings";
 @import "../bower_components/neat/app/assets/stylesheets/neat";
 @import "base/base"
 
-<% } if (includeBootstrap) { %>$icon-font-path: '../fonts/';
+// bower:scss
+// endbower
 
+<% } else if (includeBootstrap) { %>$icon-font-path: '../fonts/';
 // bower:scss
 // endbower
 

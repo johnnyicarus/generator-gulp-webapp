@@ -26,13 +26,24 @@ describe('Bourbon feature', function () {
       assert.fileContent('bower.json', '"neat"');
     });
 
-    // should add bitters files
-
-    it('should include bourbon properly at the top of main.scss', function () {
+    it('should include bourbon\/neat properly at the top of main.scss', function () {
       assert.fileContent('app/css/main.scss', /@import(.*?)bower_components\/bourbon\/app\/assets\/stylesheets\/bourbon/);
       assert.fileContent('app/css/main.scss', /@import(.*?)base\/grid-settings/);
       assert.fileContent('app/css/main.scss', /@import(.*?)bower_components\/neat\/app\/assets\/stylesheets\/neat/);
       assert.fileContent('app/css/main.scss', /@import(.*?)base\/base/);
+    });
+
+    it('should include bitters', function() {
+      assert.file([
+        'app/css/base/_base.scss',
+        'app/css/base/_buttons.scss',
+        'app/css/base/_forms.scss',
+        'app/css/base/_grid-settings.scss',
+        'app/css/base/_lists.scss',
+        'app/css/base/_tables.scss',
+        'app/css/base/_typography.scss',
+        'app/css/base/_variables.scss'
+      ]);
     });
 
   });
