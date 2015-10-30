@@ -70,6 +70,10 @@ describe('Bootstrap feature', function () {
       assert.fileContent('bower.json', '"normalize-css"')
     });
 
+    it('shouldn\'t add Bootstrap Sass as dependency', function () {
+      assert.noFileContent('bower.json', '"bootstrap-sass"');
+    });
+
     it('shouldn\'t add the comment block', function () {
       assert.noFileContent('app/index.html', 'build:js js/plugins.js')
     });

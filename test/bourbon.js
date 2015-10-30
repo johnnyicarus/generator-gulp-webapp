@@ -33,7 +33,7 @@ describe('Bourbon feature', function () {
       assert.fileContent('app/css/main.scss', /@import(.*?)base\/base/);
     });
 
-    it('should include bitters', function() {
+    it('should include bitter files', function() {
       assert.file([
         'app/css/base/_base.scss',
         'app/css/base/_buttons.scss',
@@ -70,7 +70,18 @@ describe('Bourbon feature', function () {
       assert.noFileContent('bower.json', '"neat"');
     });
 
-    // shouldn't add bitters files
+    it('shouldn\'t include bitter files', function() {
+      assert.noFile([
+        'app/css/base/_base.scss',
+        'app/css/base/_buttons.scss',
+        'app/css/base/_forms.scss',
+        'app/css/base/_grid-settings.scss',
+        'app/css/base/_lists.scss',
+        'app/css/base/_tables.scss',
+        'app/css/base/_typography.scss',
+        'app/css/base/_variables.scss'
+      ]);
+    });
 
     it('shouldn\'t include bourbon related includes at the top of main.scss', function () {
       assert.noFileContent('app/css/main.scss', /@import(.*?)bower_components\/bourbon\/app\/assets\/stylesheets\/bourbon/);
