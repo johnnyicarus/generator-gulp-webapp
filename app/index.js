@@ -273,47 +273,10 @@ module.exports = generators.Base.extend({
         }
       );
 
-      if (this.includeBourbon) {
-        this.fs.copy(
-          this.templatePath('_base.scss'),
-          this.destinationPath('app/css/base/_base.scss')
-        );
-
-        this.fs.copy(
-          this.templatePath('_buttons.scss'),
-          this.destinationPath('app/css/base/_buttons.scss')
-        );
-
-        this.fs.copy(
-          this.templatePath('_forms.scss'),
-          this.destinationPath('app/css/base/_forms.scss')
-        );
-
-        this.fs.copy(
-          this.templatePath('_grid-settings.scss'),
-          this.destinationPath('app/css/base/_grid-settings.scss')
-        );
-
-        this.fs.copy(
-          this.templatePath('_lists.scss'),
-          this.destinationPath('app/css/base/_lists.scss')
-        );
-
-        this.fs.copy(
-          this.templatePath('_tables.scss'),
-          this.destinationPath('app/css/base/_tables.scss')
-        );
-
-        this.fs.copy(
-          this.templatePath('_typography.scss'),
-          this.destinationPath('app/css/base/_typography.scss')
-        );
-
-        this.fs.copy(
-          this.templatePath('_variables.scss'),
-          this.destinationPath('app/css/base/_variables.scss')
-        );
-      }
+      this.fs.copyTpl(
+        this.templatePath('base'),
+        this.destinationPath('app/css/base')
+      );
     },
 
     scripts: function () {
