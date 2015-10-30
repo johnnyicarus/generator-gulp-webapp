@@ -1,8 +1,20 @@
-# Web app generator [![Build Status](https://secure.travis-ci.org/yeoman/generator-webapp.svg?branch=master)](http://travis-ci.org/yeoman/generator-webapp) [![Gitter](https://img.shields.io/badge/Gitter-Join_the_Yeoman_chat_%E2%86%92-00d06f.svg)](https://gitter.im/yeoman/yeoman)
+# Web app generator [![Build Status](https://secure.travis-ci.org/yeoman/generator-webapp.svg?branch=master)](http://travis-ci.org/johnnyicarus/generator-webapp) [![Gitter](https://img.shields.io/badge/Gitter-Join_the_Yeoman_chat_%E2%86%92-00d06f.svg)](https://gitter.im/yeoman/yeoman)
 
 > [Yeoman](http://yeoman.io) generator that scaffolds out a front-end web app using [gulp](http://gulpjs.com/) for the build process
 
 ![](screenshot.png)
+
+## Comparison to Upstream
+Compared to the original [generator-gulp-webapp](https://github.com/yeoman/generator-gulp-webapp), this fork offers the following additional features/changes:
+
+* SASS is used by default, feature prompt was removed
+* Choice between [Bourbon/Neat/Bitters](http://bourbon.io) and [Bootstrap](http://getbootstrap.com) or no library at all
+* [Normalize.css](https://necolas.github.io/normalize.css/) is added as a [Bower](http://bower.io) dependency when Bourbon or no SASS library is used
+* Prompt to enable asset revisioning. If it is enabled, the .htaccess file form my [Apache-Server-Configs-Fork](https://github.com/johnnyicarus/server-configs-apache) is provisioned
+* Github Pages deploy is added by default, but cleanups must be done manually (this also means that `/dist` is not ignored by git!)
+* All vendor CSS will also be rolled into `main.css`
+* Windows Tile Images and browserconfig.xml added from [H5BP](https://html5boilerplate.com/)
+* Asset folders have been renamed to `css/`, `js/`, `img/` and `fnt/` (to quickly change this back, theres constants set in `gulpfile.babel.js`)
 
 
 ## Features
