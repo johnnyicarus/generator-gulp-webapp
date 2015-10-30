@@ -72,6 +72,10 @@ module.exports = generators.Base.extend({
         name: 'Modernizr',
         value: 'includeModernizr',
         checked: true
+      }, {
+        name: 'Asset Revving',
+        value: 'includeRevving',
+        checked: false
       }]
     }, {
       type: 'list',
@@ -86,7 +90,7 @@ module.exports = generators.Base.extend({
         value: 'includeBootstrap'
       }],
       when: function (answers) {
-        return !answers.features.indexOf('includeStyleFramework') !== -1;
+        return answers.features.indexOf('includeStyleFramework') !== -1;
       }
     }, {
       type: 'confirm',
@@ -110,6 +114,7 @@ module.exports = generators.Base.extend({
       // we change a bit this way of doing to automatically do this in the self.prompt() method.
       this.includeStyleFramework = hasFeature('includeStyleFramework');
       this.includeModernizr = hasFeature('includeModernizr');
+      this.includeRevving = hasFeature('includeRevving');
       this.includeJQuery = answers.includeJQuery;
 
       if (this.includeStyleFramework) {
@@ -142,17 +147,19 @@ module.exports = generators.Base.extend({
           version: this.pkg.version,
           includeBootstrap: this.includeBootstrap,
           includeBabel: this.options['babel'],
+          includeRevving: this.includeRevving,
           testFramework: this.options['test-framework']
         }
       );
     },
 
     packageJSON: function () {
-      this.fs.copy(
+      this.fs.copyTpl(
         this.templatePath('_package.json'),
-        this.destinationPath('package.json')
+        this.destinationPath('package.json'),
         {
-          includeBabel: this.options['babel']
+          includeBabel: this.options['babel'],
+          includeRevving: this.includeRevving
         }
       );
     },
@@ -261,6 +268,13 @@ module.exports = generators.Base.extend({
         this.templatePath('tile-wide.png'),
         this.destinationPath('app/tile-wide.png')
       );
+
+      if (this.includeRevving) {
+        this.fs.copy(
+          this.templatePath('htaccess'),
+          this.destinationPath('app/.htaccess')
+        )
+      }
     },
 
     styles: function () {
@@ -273,10 +287,12 @@ module.exports = generators.Base.extend({
         }
       );
 
-      this.fs.copyTpl(
-        this.templatePath('base'),
-        this.destinationPath('app/css/base')
-      );
+      if (this.includeBourbon) {
+        this.fs.copyTpl(
+          this.templatePath('base'),
+          this.destinationPath('app/css/base')
+        );
+      }
     },
 
     scripts: function () {
