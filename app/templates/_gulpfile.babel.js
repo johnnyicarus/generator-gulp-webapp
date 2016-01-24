@@ -21,8 +21,6 @@ gulp.task('styles', () => {
       precision: 10,
       includePaths: ['.']
     }).on('error', $.sass.logError))
-  return gulp.src('app/'+stylesFold+'/*.css')
-    .pipe($.sourcemaps.init())<% } %>
     .pipe($.autoprefixer({browsers: ['> 1%', 'last 2 versions', 'Firefox ESR']}))
     .pipe($.sourcemaps.write())
     .pipe(gulp.dest('.tmp/'+stylesFold))
@@ -31,12 +29,12 @@ gulp.task('styles', () => {
 
 <% if (includeBabel) { -%>
 gulp.task('scripts', () => {
-  return gulp.src('app/scripts/**/*.js')
+  return gulp.src('app/'+scriptsFold+'/**/*.js')
     .pipe($.plumber())
     .pipe($.sourcemaps.init())
     .pipe($.babel())
     .pipe($.sourcemaps.write('.'))
-    .pipe(gulp.dest('.tmp/scripts'))
+    .pipe(gulp.dest('.tmp/'+scriptsFold))
     .pipe(reload({stream: true}));
 });
 <% } -%>
@@ -71,11 +69,15 @@ gulp.task('html', ['styles'], () => {
   return gulp.src('app/*.html')
     .pipe($.useref({searchPath: ['.tmp', 'app', '.']}))
     .pipe($.if('*.js', $.uglify()))
-    .pipe($.if('*.css', $.cssnano()))<% if (includeRevving) { %>
-    .pipe($.rev())<% } %>
+    .pipe($.if('*.css', $.cssnano()))
+<% if (includeRevving) { -%>
+    .pipe($.rev())
+<% } -%>
     .pipe(assets.restore())
-    .pipe($.useref())<% if (includeRevving) { %>
-    .pipe($.revReplace())<% } %>
+    .pipe($.useref())
+<% if (includeRevving) { -%>
+    .pipe($.revReplace())
+<% } -%>
     .pipe($.if('*.html', $.htmlmin({collapseWhitespace: true})))
     .pipe(gulp.dest('dist'));
 });
@@ -167,9 +169,9 @@ gulp.task('serve:test', () => {
       baseDir: 'test',
       routes: {
 <% if (includeBabel) { -%>
-        '/scripts': '.tmp/scripts',
+        '/'+scriptsFold: '.tmp/'+scriptsFold,
 <% } else { -%>
-        '/scripts': 'app/scripts',
+        '/'+scriptsFold: 'app/'+scriptsFold,
 <% } -%>
         '/bower_components': 'bower_components'
       }
@@ -192,8 +194,8 @@ gulp.task('wiredep', () => {
     .pipe(gulp.dest('app/'+stylesFold));
 
   gulp.src('app/*.html')
-    .pipe(wiredep({<% if (includeBootstrap) { %>
-      exclude: ['bootstrap-sass'],<% } %>
+    .pipe(wiredep({<% if (includeBootstrap) { -%>
+      exclude: ['bootstrap-sass'],<% } -%>
       ignorePath: /^(\.\.\/)*\.\./
     }))
     .pipe(gulp.dest('app'));

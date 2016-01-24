@@ -26,8 +26,9 @@ describe('Babel feature', function () {
       assert.fileContent('gulpfile.babel.js', "gulp.task('scripts'");
       assert.fileContent('gulpfile.babel.js', "['styles', 'scripts']");
       assert.fileContent('gulpfile.babel.js', "['styles', 'scripts', 'fonts']");
-      assert.fileContent('gulpfile.babel.js', "gulp.watch('app/scripts/**/*.js', ['scripts'])");
-      assert.fileContent('gulpfile.babel.js', "'/scripts': '.tmp/scripts',");
+      assert.fileContent('gulpfile.babel.js', "'.tmp/\'+scriptsFold+\'/**/*.js',");
+      assert.fileContent('gulpfile.babel.js', "gulp.watch('app/\'+scriptsFold+\'/**/*.js', ['scripts'])");
+      assert.fileContent('gulpfile.babel.js', "'/'+scriptsFold: '.tmp/'+scriptsFold,");
     });
   });
 
@@ -53,9 +54,9 @@ describe('Babel feature', function () {
       assert.noFileContent('gulpfile.babel.js', "gulp.task('scripts'");
       assert.fileContent('gulpfile.babel.js', "['styles']");
       assert.fileContent('gulpfile.babel.js', "['styles', 'fonts']");
-      assert.fileContent('gulpfile.babel.js', "'app/scripts/**/*.js',");
-      assert.noFileContent('gulpfile.babel.js', "gulp.watch('app/scripts/**/*.js', ['scripts'])");
-      assert.fileContent('gulpfile.babel.js', "'/scripts': 'app/scripts',");
+      assert.fileContent('gulpfile.babel.js', "'app/\'+scriptsFold+\'/**/*.js',");
+      assert.noFileContent('gulpfile.babel.js', "gulp.watch('app/\'+scriptsFold+\'/**/*.js', ['scripts'])");
+      assert.fileContent('gulpfile.babel.js', "'/'+scriptsFold: 'app/'+scriptsFold,");
     });
   });
 });
