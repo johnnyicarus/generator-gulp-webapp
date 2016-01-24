@@ -71,11 +71,8 @@ gulp.task('html', ['styles'], () => {
     .pipe($.if('*.js', $.uglify()))
     .pipe($.if('*.css', $.cssnano()))
 <% if (includeRevving) { -%>
-    .pipe($.rev())
-<% } -%>
-    .pipe(assets.restore())
-    .pipe($.useref())
-<% if (includeRevving) { -%>
+    .pipe($.if('*.js', $.rev()))
+    .pipe($.if('*.css', $.rev()))
     .pipe($.revReplace())
 <% } -%>
     .pipe($.if('*.html', $.htmlmin({collapseWhitespace: true})))
@@ -156,6 +153,7 @@ gulp.task('serve:dist', () => {
   });
 });
 
+const scriptRoute = '/'+scriptsFold;
 <% if (includeBabel) { -%>
 gulp.task('serve:test', ['scripts'], () => {
 <% } else { -%>
@@ -169,9 +167,9 @@ gulp.task('serve:test', () => {
       baseDir: 'test',
       routes: {
 <% if (includeBabel) { -%>
-        '/'+scriptsFold: '.tmp/'+scriptsFold,
+        scriptsRoute: '.tmp/'+scriptsFold,
 <% } else { -%>
-        '/'+scriptsFold: 'app/'+scriptsFold,
+        scriptsRoute: 'app/'+scriptsFold,
 <% } -%>
         '/bower_components': 'bower_components'
       }

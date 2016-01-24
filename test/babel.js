@@ -28,7 +28,7 @@ describe('Babel feature', function () {
       assert.fileContent('gulpfile.babel.js', "['styles', 'scripts', 'fonts']");
       assert.fileContent('gulpfile.babel.js', "'.tmp/\'+scriptsFold+\'/**/*.js',");
       assert.fileContent('gulpfile.babel.js', "gulp.watch('app/\'+scriptsFold+\'/**/*.js', ['scripts'])");
-      assert.fileContent('gulpfile.babel.js', "'/'+scriptsFold: '.tmp/'+scriptsFold,");
+      assert.fileContent('gulpfile.babel.js', "'scriptsRoute: '.tmp/'+scriptsFold,");
     });
   });
 
@@ -56,7 +56,7 @@ describe('Babel feature', function () {
       assert.fileContent('gulpfile.babel.js', "['styles', 'fonts']");
       assert.fileContent('gulpfile.babel.js', "'app/\'+scriptsFold+\'/**/*.js',");
       assert.noFileContent('gulpfile.babel.js', "gulp.watch('app/\'+scriptsFold+\'/**/*.js', ['scripts'])");
-      assert.fileContent('gulpfile.babel.js', "'/'+scriptsFold: 'app/'+scriptsFold,");
+      assert.fileContent('gulpfile.babel.js', "scriptsRoute: 'app/'+scriptsFold,");
     });
   });
 });
