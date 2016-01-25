@@ -24,8 +24,8 @@ describe('revving feature', function () {
     });
 
     it('should call gulp-rev and gulp-rev-replace in the html task', function () {
-      assert.fileContent('gulpfile.babel.js', '.pipe($.rev())');
-
+      assert.fileContent("gulpfile.babel.js", ".pipe($.if('*.js', $.rev()))");
+      assert.fileContent("gulpfile.babel.js", ".pipe($.if('*.css', $.rev()))");
       assert.fileContent('gulpfile.babel.js', '.pipe($.revReplace())');
     });
 
@@ -52,8 +52,8 @@ describe('revving feature', function () {
     });
 
     it('shouldn\'t call gulp-rev and gulp-useref', function () {
-      assert.noFileContent('gulpfile.babel.js', '.pipe($.rev())');
-
+      assert.noFileContent("gulpfile.babel.js", ".pipe($.if('*.js', $.rev()))");
+      assert.noFileContent("gulpfile.babel.js", ".pipe($.if('*.css', $.rev()))");
       assert.noFileContent('gulpfile.babel.js', '.pipe($.revReplace())');
     });
 
