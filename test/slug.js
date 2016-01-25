@@ -1,7 +1,8 @@
 'use strict';
 var path = require('path');
+var helpers = require('yeoman-test');
 var assert = require('yeoman-assert');
-var helpers = require('yeoman-generator').test;
+
 
 describe('slug name', function () {
   before(function (done) {
