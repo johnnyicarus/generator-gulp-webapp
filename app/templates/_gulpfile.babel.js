@@ -129,7 +129,6 @@ gulp.task('serve', ['styles', 'fonts'], () => {
     'app/*.html',
 <% if (!includeBabel) { -%>
     'app/'+scriptsFold+'/**/*.js',
-
 <% } -%>
     'app/'+imagesFold+'/**/*',
     '.tmp/'+fontsFold+'/**/*'
